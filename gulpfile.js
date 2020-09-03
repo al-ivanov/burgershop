@@ -15,7 +15,7 @@ const browserSync = require('browser-sync').create();
 
 gulp.task('clean', function(){
 
-    return remove(['dist']).then(paths => {
+    return remove(['docs']).then(paths => {
         console.log('Deleted files and folders:\n', paths.join('\n'));
     });
 
@@ -24,13 +24,13 @@ gulp.task('clean', function(){
 // переносим html файлы
 gulp.task('html', function() {
     return gulp.src('index.html')
-        .pipe(gulp.dest('dist'))
+        .pipe(gulp.dest('docs'))
 });
 
 // переносим fonts файлы
 gulp.task('fonts', function() {
     return gulp.src('fonts/*.*')
-        .pipe(gulp.dest('dist/fonts'))
+        .pipe(gulp.dest('docs/fonts'))
 });
 
 // перенос и оптимизация картинок
@@ -38,7 +38,7 @@ gulp.task('images', function () {
     return gulp
         .src('img/**/*.{png,svg,jpg}')
         .pipe(imagemin({optimizationLevel: 3, progressive: true, interlaced: true}))
-        .pipe(gulp.dest('dist/img/'));
+        .pipe(gulp.dest('docs/img/'));
 });
 
 
@@ -55,7 +55,7 @@ gulp.task('vendor:css', function(){
                 suffix: ".min"
             }))
             .pipe(sourcemaps.write())
-            .pipe(gulp.dest('dist/css'));
+            .pipe(gulp.dest('docs/css'));
     }
 );
 
@@ -72,7 +72,7 @@ gulp.task('build:css', function(){
             suffix: ".min"
         }))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('dist/css'))
+        .pipe(gulp.dest('docs/css'))
         .pipe(browserSync.stream());
     }
 );
@@ -84,7 +84,7 @@ gulp.task('vendor:js', function(cb){
             concat('vendor.min.js'),
             uglify(),
             sourcemaps.write(),
-            gulp.dest('dist/js')
+            gulp.dest('docs/js')
         ],
         cb);
 });
@@ -96,7 +96,7 @@ gulp.task('build:js', function(cb){
         concat('main.min.js'),
         uglify(),
         sourcemaps.write(),
-        gulp.dest('dist/js')
+        gulp.dest('docs/js')
     ],
     cb);
 });
@@ -118,10 +118,10 @@ gulp.task('watch', function(){
 gulp.task('serve', ['html', 'fonts', 'images', 'vendor:js', 'build:js', 'vendor:css', 'build:css'], function() {
 
     browserSync.init({
-        server: "./dist"
+        server: "./docs"
     });
 
-    gulp.watch('dist/**/*.*', ['reload']);
+    gulp.watch('docs/**/*.*', ['reload']);
 });
 
 gulp.task('default', ['serve', 'watch']);
